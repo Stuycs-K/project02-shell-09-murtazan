@@ -11,6 +11,11 @@
 #include <stdbool.h>
 
 void processInput(char * input_buff){
+    if (strcmp("ls", input_buff) == 0){ //ls command not being detected... not equal for some reason
+        printf("ls command ran");
+    }else{
+        printf("%d", strcmp("ls", input_buff));
+    }
     printf("%s", input_buff);
 }
 
