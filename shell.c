@@ -15,12 +15,11 @@ void processInput(char * input_buff){
     char * cmd;
     char * arg1;
     cmd = strsep(&src, " ");
-    if (strcmp("ls", input_buff) == 0){ //ls command not being detected... not equal for some reason
-        printf("ls command ran");
-    }else{
-        printf("%d", strcmp("ls", input_buff));
+    arg1 = strsep(&src, " ");
+    if (strncmp("ls", cmd, 2) == 0){ //ls command not being detected... not equal for some reason
+      printf("ls command ran");
     }
-    printf("%s", input_buff);
+    printf("%s", cmd);
 }
 
 int main(){
