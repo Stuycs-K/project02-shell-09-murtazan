@@ -11,4 +11,5 @@ The Damned
 
 ## Bugs:
 - After getting an error message when using "cd" (i.e not writing a valid directory), the next usage of ls will seg fault.
+- Cd'ing into home while being in home will seg fault, instead of just not doing anything.
 ## Function Header(s):
