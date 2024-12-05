@@ -13,16 +13,17 @@ int err(char * input){;
     printf("%s: %s\n", input, strerror(errno));
 }
 void lsCmd(char * cmdInput){ //from lab08
-  //display recieved arg
-  // if (strncmp(input, " ", 1) == 0){
-  //   strcpy(input, ".");
-  // }
   char input[100];
+  int inputLen;
   if (cmdInput == NULL){
     strcpy(input, ".");
   }else{
-    strncpy(input, cmdInput, strlen(cmdInput) - 1);
+    inputLen = strlen(cmdInput);
+    strncpy(input, cmdInput, inputLen - 1);
   }
+  //null terminate the new copy
+  input[inputLen - 1] = '\0';
+  printf("input [lsCmd]: %s\n", input);
   //set dir
   DIR * d;
   DIR * d2;
@@ -31,7 +32,10 @@ void lsCmd(char * cmdInput){ //from lab08
   d = opendir(PATH);
   d2 = opendir(PATH);
   d3 = opendir(PATH);
-  if (d == NULL) err(input);
+  if (d == NULL){
+    err(input);
+    return;
+  }
   if (d2 == NULL) err(input);
   if (d3 == NULL) err(input);
   printf("Statistics for directory: %s\n", input);
