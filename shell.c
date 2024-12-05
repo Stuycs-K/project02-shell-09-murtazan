@@ -106,21 +106,15 @@ void cdCmd(char * cmdInput){
 }
 
 void processInput(char * input_buff){
-    char * args[100];
+    char * cmds[100];
     char * src = input_buff;
     char * cmd;
     cmd = strsep(&src, ";");
-    int argsIndex = 0;
-    while (cmd != NULL){
-        args[argsIndex] = cmd; //*cmd?? might not work
-        argsIndex += 1;
+    int cmdsIndex = 0;
+    while (cmd != NULL){ //list commands in an array. [;]
+        cmds[cmdsIndex] = cmd;
+        cmdsIndex += 1;
         cmd = strsep(&src, ";");
-    }
-    int testIndex = 0;
-    printf("Commands found:\n");
-    while (testIndex < argsIndex){
-        printf("%s\n", args[testIndex]);
-        testIndex += 1;
     }
     // cmd = strsep(&src, " ");
     // arg1 = strsep(&src, " ");
