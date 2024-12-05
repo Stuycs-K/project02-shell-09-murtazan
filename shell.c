@@ -14,7 +14,7 @@
 // - fix the two bugs listed on README.md
 // - reorganize the entire code to be in seperate files (one file for parsing? one for all the commands? you can figure it out)
 // - extension of above, remake parsing in order to be able to parse multi-commands and multi-arguments better.
-// - fork and exec
+// - fork and exec [higher priority?]
 // - >, < and | (pipes)
 // - you should be done at this point. have fun trying other commands (cat? touch? pwd? doesn't have to be extremely difficult ones)
 
@@ -93,14 +93,13 @@ void lsCmd(char * cmdInput){ //from lab08
 void cdCmd(char * cmdInput){
   char input[100];
   int inputLen;
-  if (cmdInput == NULL){
+  if (cmdInput == NULL || strncmp(cmdInput, "~", 1) == 0){
     strcpy(input, getenv("HOME"));
   }else{
     inputLen = strlen(cmdInput);
     strncpy(input, cmdInput, inputLen - 1);
+    input[inputLen - 1] = '\0';
   }
-  //null terminate the new copy
-  input[inputLen - 1] = '\0';
   char * PATH = input;
   if (chdir(PATH) == -1) err(input);
   // char cwd_buff[100];
