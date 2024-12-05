@@ -9,9 +9,11 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdbool.h>
+// Error Messages
 int err(char * input){;
     printf("%s: %s\n", input, strerror(errno));
 }
+
 void lsCmd(char * cmdInput){ //from lab08
   char input[100];
   int inputLen;
@@ -23,7 +25,6 @@ void lsCmd(char * cmdInput){ //from lab08
   }
   //null terminate the new copy
   input[inputLen - 1] = '\0';
-  printf("input [lsCmd]: %s\n", input);
   //set dir
   DIR * d;
   DIR * d2;
@@ -80,14 +81,32 @@ void lsCmd(char * cmdInput){ //from lab08
   closedir(d);
 }
 
+void cdCmd(char * cmdInput){
+  char input[100];
+  int inputLen;
+  if (cmdInput == NULL){
+    strcpy(input, "~");
+  }else{
+    inputLen = strlen(cmdInput);
+    strncpy(input, cmdInput, inputLen - 1);
+  }
+  //null terminate the new copy
+  input[inputLen - 1] = '\0';
+  char * PATH = input;
+  if (chdir(PATH) == -1) err(input);
+}
+
 void processInput(char * input_buff){
     char * src = input_buff;
     char * cmd;
     char * arg1;
     cmd = strsep(&src, " ");
     arg1 = strsep(&src, " ");
-    if (strncmp("ls", cmd, 2) == 0){ //ls command not being detected... not equal for some reason
+    if (strncmp("ls", cmd, 2) == 0){
       lsCmd(arg1);
+    }
+    if (strncmp("cd", cmd, 2) == 0){
+      cdCmd(arg1);
     }
 }
 
