@@ -9,6 +9,15 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdbool.h>
+
+// stuff to do:
+// - fix the two bugs listed on README.md
+// - reorganize the entire code to be in seperate files (one file for parsing? one for all the commands? you can figure it out)
+// - extension of above, remake parsing in order to be able to parse multi-commands and multi-arguments better.
+// - fork and exec
+// - >, < and | (pipes)
+// - you should be done at this point. have fun trying other commands (cat? touch? pwd? doesn't have to be extremely difficult ones)
+
 // Error Messages
 int err(char * input){;
     printf("%s: %s\n", input, strerror(errno));
