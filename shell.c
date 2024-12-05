@@ -85,7 +85,7 @@ void cdCmd(char * cmdInput){
   char input[100];
   int inputLen;
   if (cmdInput == NULL){
-    strcpy(input, "~");
+    strcpy(input, getenv("HOME"));
   }else{
     inputLen = strlen(cmdInput);
     strncpy(input, cmdInput, inputLen - 1);
@@ -94,6 +94,9 @@ void cdCmd(char * cmdInput){
   input[inputLen - 1] = '\0';
   char * PATH = input;
   if (chdir(PATH) == -1) err(input);
+  // char cwd_buff[100];
+  // getcwd(cwd_buff, 100);
+  // printf("current dir: %s\n", cwd_buff);
 }
 
 void processInput(char * input_buff){
@@ -113,8 +116,8 @@ void processInput(char * input_buff){
 int main(){
     char input_buff[100];
     char cwd_buff[100];
-    getcwd(cwd_buff, 100);
     while (true){
+        getcwd(cwd_buff, 100);
         printf("%s $ ", cwd_buff);
         fgets(input_buff,100,stdin);
         processInput(input_buff);
