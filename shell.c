@@ -31,9 +31,9 @@ void lsCmd(char * cmdInput){ //from lab08
   }else{
     inputLen = strlen(cmdInput);
     strncpy(input, cmdInput, inputLen - 1);
+    input[inputLen - 1] = '\0';
   }
   //null terminate the new copy
-  input[inputLen - 1] = '\0';
   //set dir
   DIR * d;
   DIR * d2;

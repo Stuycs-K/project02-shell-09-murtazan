@@ -5,11 +5,10 @@ Naf (Nafiyu Murtaza)
 ## Creative Team Name:
 The Damned
 ## Features (Implemented): [Descriptions and more to be added later]
-- ls [w.i.p]
-- cd [w.i.p]
+- ls
+- cd
 ## Features (Attempted, Failed):
 
 ## Bugs:
-- After getting an error message when using "cd" (i.e not writing a valid directory), the next usage of ls will seg fault.
-- Cd'ing into home while being in home will seg fault, instead of just not doing anything.
+
 ## Function Header(s):
