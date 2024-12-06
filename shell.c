@@ -30,8 +30,7 @@ void cdCmd(char * cmdInput){
     strcpy(input, getenv("HOME"));
   }else{
     inputLen = strlen(cmdInput);
-    strncpy(input, cmdInput, inputLen - 1);
-    input[inputLen - 1] = '\0';
+    strcpy(input, cmdInput);
   }
   char * PATH = input;
   if (chdir(PATH) == -1) err(input);
@@ -64,17 +63,17 @@ void processInput(char * input_buff){
         argsIndex += 1;
         arg = strsep(&cmds[cmdsIter], " ");
       }
-      int TOOMANYARGS = 0;
+      int EXECFORK = 0;
       if (strcmp(args[0], "cd") == 0){
         // if (args[2] != NULL && args[2] != ""){
         //   printf("cd: too many arguments! args[2]: %s\n", args[2]);
         //   TOOMANYARGS = 1;
         // }else{
           cdCmd(args[1]);
-          break;
+          EXECFORK = 1;
         // }
       }
-      if (TOOMANYARGS != 1){
+      if (EXECFORK != 1){
         pid_t pid;
         pid = fork();
         if (pid <= -1){
