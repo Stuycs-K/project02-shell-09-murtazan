@@ -130,9 +130,10 @@ void processInput(char * input_buff){
         argsIndex += 1;
         arg = strsep(&cmds[cmdsIter], " ");
       }
-      args[argsIndex - 1] = '\0';
+      args[argsIndex - 1][strcspn(args[argsIndex - 1], "\n")] = 0;
       pid_t pid;
-      if (pid = fork() <= -1){
+      pid = fork();
+      if (pid <= -1){
         perror("fork fail\n");
         exit(1);
       }else if (pid == 0){
@@ -140,6 +141,7 @@ void processInput(char * input_buff){
         perror("execvp fail\n");
         exit(1);
       }else{
+        wait(NULL);
         cmdsIter += 1;
       }
     }
