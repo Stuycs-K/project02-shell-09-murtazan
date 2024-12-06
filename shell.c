@@ -110,6 +110,7 @@ void cdCmd(char * cmdInput){
 void processInput(char * input_buff){
     char * cmds[100];
     char * src = input_buff;
+    src[strcspn(src, "\n")] = 0;
     char * cmd;
     cmd = strsep(&src, ";");
     int cmdsIndex = 0;
@@ -130,7 +131,6 @@ void processInput(char * input_buff){
         argsIndex += 1;
         arg = strsep(&cmds[cmdsIter], " ");
       }
-      args[argsIndex - 1][strcspn(args[argsIndex - 1], "\n")] = 0;
       pid_t pid;
       pid = fork();
       if (pid <= -1){
