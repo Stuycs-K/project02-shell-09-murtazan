@@ -116,6 +116,32 @@ void processInput(char * input_buff){
         cmdsIndex += 1;
         cmd = strsep(&src, ";");
     }
+    printf("Commands retrieved:\n");
+    int testCmds = 0;
+    while (testCmds < cmdsIndex){
+      printf("%s\n", cmds[testCmds]);
+      testCmds += 1;
+    }
+    // process each command after parsing arguments
+    int cmdsIter = 0;
+    while (cmdsIter < cmdsIndex){
+      char * args[100];
+      char * arg;
+      arg = strsep(&cmds[cmdsIter], " ");
+      int argsIndex = 0;
+      while (arg != NULL){
+        args[argsIndex] = arg;
+        argsIndex += 1;
+        arg = strsep(&cmds[cmdsIter], " ");
+      }
+      printf("Args retrieved:\n");
+      int testArgs = 0;
+      while (testArgs < argsIndex){
+        printf("%s\n", args[testArgs]);
+        testArgs += 1;
+      }
+      cmdsIter += 1;
+    }
     // cmd = strsep(&src, " ");
     // arg1 = strsep(&src, " ");
     // if (strncmp("ls", cmd, 2) == 0){
