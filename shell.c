@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <stdbool.h>
+#include <sys/wait.h>
 
 // stuff to do:
 // - reorganize the entire code to be in seperate files (one file for parsing? one for all the commands? you can figure it out)
@@ -23,6 +24,7 @@ int err(char * input){;
 }
 
 void lsCmd(char * cmdInput){ //from lab08
+  printf("input received: %s\n", cmdInput);
   char input[100];
   int inputLen;
   if (cmdInput == NULL){
@@ -116,12 +118,6 @@ void processInput(char * input_buff){
         cmdsIndex += 1;
         cmd = strsep(&src, ";");
     }
-    printf("Commands retrieved:\n");
-    int testCmds = 0;
-    while (testCmds < cmdsIndex){
-      printf("%s\n", cmds[testCmds]);
-      testCmds += 1;
-    }
     // process each command after parsing arguments
     int cmdsIter = 0;
     while (cmdsIter < cmdsIndex){
@@ -134,13 +130,19 @@ void processInput(char * input_buff){
         argsIndex += 1;
         arg = strsep(&cmds[cmdsIter], " ");
       }
-      printf("Args retrieved:\n");
-      int testArgs = 0;
-      while (testArgs < argsIndex){
-        printf("%s\n", args[testArgs]);
-        testArgs += 1;
+      args[argsIndex - 1] = '\0';
+      pid_t pid;
+      if (pid = fork() == -1){
+        perror("fork fail\n");
+        exit(1);
+      }else if (pid == 0){
+        execvp(args[0], args);
+        perror("execvp fail\n");
+        exit(1);
+      }else{
+        wait(NULL);
+        cmdsIter += 1;
       }
-      cmdsIter += 1;
     }
     // cmd = strsep(&src, " ");
     // arg1 = strsep(&src, " ");
