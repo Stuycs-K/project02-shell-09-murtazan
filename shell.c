@@ -23,73 +23,6 @@ int err(char * input){;
     printf("%s: %s\n", input, strerror(errno));
 }
 
-void lsCmd(char * cmdInput){ //from lab08
-  printf("input received: %s\n", cmdInput);
-  char input[100];
-  int inputLen;
-  if (cmdInput == NULL){
-    strcpy(input, ".");
-  }else{
-    inputLen = strlen(cmdInput);
-    strncpy(input, cmdInput, inputLen - 1);
-    input[inputLen - 1] = '\0';
-  }
-  //set dir
-  DIR * d;
-  DIR * d2;
-  DIR * d3;
-  char * PATH = input;
-  d = opendir(PATH);
-  d2 = opendir(PATH);
-  d3 = opendir(PATH);
-  if (d == NULL){
-    err(input);
-    return;
-  }
-  if (d2 == NULL) err(input);
-  if (d3 == NULL) err(input);
-  printf("Statistics for directory: %s\n", input);
-  struct dirent *dirEntry;
-  int numBytes = 0;
-  int currFile;
-  char buff[129];
-  buff[128] = 0;
-  while ( (dirEntry = readdir(d3)) ){
-    //gather length of full curr PATH
-    char * currPath = malloc(strlen(PATH) + strlen(dirEntry->d_name) + 1);
-    if (strcmp(PATH, ".") != 0){
-      currPath = strcpy(currPath, PATH);
-      currPath = strcat(currPath, "/");
-      currPath = strcat(currPath, dirEntry->d_name);
-    }else{
-      currPath = dirEntry->d_name;
-    }
-    if (dirEntry->d_type == DT_REG){
-      currFile = open(currPath, O_RDONLY, 0);
-      if (currFile == -1) err(currPath);
-      int bytes;
-      while ( (bytes = read(currFile, buff, 128)) ){
-        if (bytes == -1) err(currPath);
-        numBytes += bytes;
-      }
-    }
-  }
-  printf("Total Directory Size: %u Bytes\n", numBytes);
-  printf("Directories:\n");
-  while( (dirEntry = readdir(d)) ){
-    if (dirEntry->d_type == DT_DIR){
-      printf("  %s\n", dirEntry->d_name);
-    }
-  }
-  printf("Regular files:\n");
-  while( (dirEntry = readdir(d2)) ){
-    if (dirEntry->d_type == DT_REG){
-      printf("  %s\n", dirEntry->d_name);
-    }
-  }
-  closedir(d);
-}
-
 void cdCmd(char * cmdInput){
   char input[100];
   int inputLen;
@@ -131,17 +64,31 @@ void processInput(char * input_buff){
         argsIndex += 1;
         arg = strsep(&cmds[cmdsIter], " ");
       }
-      pid_t pid;
-      pid = fork();
-      if (pid <= -1){
-        perror("fork fail\n");
-        exit(1);
-      }else if (pid == 0){
-        execvp(args[0], args);
-        perror("execvp fail\n");
-        exit(1);
+      int TOOMANYARGS = 0;
+      if (strcmp(args[0], "cd") == 0){
+        // if (args[2] != NULL && args[2] != ""){
+        //   printf("cd: too many arguments! args[2]: %s\n", args[2]);
+        //   TOOMANYARGS = 1;
+        // }else{
+          cdCmd(args[1]);
+          break;
+        // }
+      }
+      if (TOOMANYARGS != 1){
+        pid_t pid;
+        pid = fork();
+        if (pid <= -1){
+          perror("fork fail\n");
+          exit(1);
+        }else if (pid == 0){
+          execvp(args[0], args);
+          perror("execvp fail\n");
+          exit(1);
+        }else{
+          wait(NULL);
+          cmdsIter += 1;
+        }
       }else{
-        wait(NULL);
         cmdsIter += 1;
       }
     }
