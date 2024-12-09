@@ -29,6 +29,7 @@ void cdCmd(char * cmdInput){
   if (cmdInput == NULL || strncmp(cmdInput, "~", 1) == 0){
     strcpy(input, getenv("HOME"));
   }else{
+    printf("not empty nor ~\n");
     inputLen = strlen(cmdInput);
     strcpy(input, cmdInput);
   }
@@ -80,6 +81,9 @@ void processInput(char * input_buff){
           perror("fork fail\n");
           exit(1);
         }else if (pid == 0){
+          if(args[1] == ""){
+            args[1] = NULL;
+          }
           execvp(args[0], args);
           perror("execvp fail\n");
           exit(1);
