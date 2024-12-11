@@ -11,25 +11,24 @@
 #include <stdbool.h>
 #include <sys/wait.h>
 
-// stuff to do:
-// - reorganize the entire code to be in seperate files (one file for parsing? one for all the commands? you can figure it out)
-// - extension of above, remake parsing in order to be able to parse multi-commands and multi-arguments better.
-// - fork and exec [higher priority?]
-// - >, < and | (pipes)
-// - you should be done at this point. have fun trying other commands (cat? touch? pwd? doesn't have to be extremely difficult ones)
-
-// Error Messages
-int err(char * input){;
+// int err(char * input)
+// used primarily for errors found in 'void cdCmd(char * cmdInput)'
+// 'char * input' takes in stdin input from 'void cdCmd(char * cmdInput)' in order to display in a user-friendly way an error message
+// returns nothing, because it simply prints an error.
+void err(char * input){;
     printf("%s: %s\n", input, strerror(errno));
 }
 
+// void cdCmd(char * cmdInput)
+// the 'cd' command of the shell, used to change directories, if said directory exists.
+// returns nothing, because this command is used to change directories.
+// 'char * cmdInput' takes in an input from 'void processInput(char * input_buff)'; this determines the directory that 'void cdCmd(char * cmdInput)' will change into.
 void cdCmd(char * cmdInput){
   char input[100];
   int inputLen;
   if (cmdInput == NULL || strncmp(cmdInput, "~", 1) == 0){
     strcpy(input, getenv("HOME"));
   }else{
-    printf("not empty nor ~\n");
     inputLen = strlen(cmdInput);
     strcpy(input, cmdInput);
   }
@@ -40,6 +39,11 @@ void cdCmd(char * cmdInput){
   // printf("current dir: %s\n", cwd_buff);
 }
 
+// void processInput(char * input_buff)
+// parses stdin into multiple commands and arguments for easy execvp'ing and usage of 'void cdCmd(char * cmdInput)'.
+// this function also does the execvp'ing itself.
+// returns nothing, because this command runs other commands within it.
+// 'char * input_buff' receives the input from stdin in 'int main()'.
 void processInput(char * input_buff){
     char * cmds[100];
     char * src = input_buff;
@@ -81,9 +85,6 @@ void processInput(char * input_buff){
           perror("fork fail\n");
           exit(1);
         }else if (pid == 0){
-          if(args[1] == ""){
-            args[1] = NULL;
-          }
           execvp(args[0], args);
           perror("execvp fail\n");
           exit(1);
@@ -108,7 +109,11 @@ void processInput(char * input_buff){
     // }
 }
 
-int main(){
+// int main()
+// the frontend: prints the current working directory and displays an input for users to provide.
+// 'int argc' is not used for anything. 'char *argv[]' is used to determine if the shell was ran with a command to run prematurely.
+// returns 0.
+int main(int argc, char *argv[]){
     char input_buff[100];
     char cwd_buff[100];
     while (true){
